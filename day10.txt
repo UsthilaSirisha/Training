@@ -1,0 +1,103 @@
+Assignment 5: Begin a transaction, perform a series of INSERTs into 'orders', setting a SAVEPOINT after each, 
+rollback to the second SAVEPOINT, and COMMIT the overall transaction.
+
+Suppose we have an 'orders' table with columns 'order_id', 'customer_id', and 'order_date'. We'll begin a transaction
+, perform a series of INSERTs into the 'orders' table, set a SAVEPOINT after each INSERT, rollback to the second SAVEPOINT, 
+and finally, commit the overall transaction.
+
+Here's the example SQL code:
+-- Begin the transaction
+BEGIN TRANSACTION;
+
+-- First INSERT
+INSERT INTO orders (order_id, customer_id, order_date) VALUES (1, 101, '2024-05-15');
+SAVEPOINT first_savepoint;
+
+-- Second INSERT
+INSERT INTO orders (order_id, customer_id, order_date) VALUES (2, 102, '2024-05-16');
+SAVEPOINT second_savepoint;
+
+-- Third INSERT
+INSERT INTO orders (order_id, customer_id, order_date) VALUES (3, 103, '2024-05-17');
+SAVEPOINT third_savepoint;
+
+-- Rollback to the second SAVEPOINT
+ROLLBACK TO SAVEPOINT second_savepoint;
+
+-- Commit the overall transaction
+COMMIT;
+
+In this example:
+
+1)We begin a transaction using the BEGIN TRANSACTION statement.
+2)Three INSERT statements add rows to the 'orders' table, with each row representing an order.
+3)After each INSERT, we set a SAVEPOINT using the SAVEPOINT statement.
+4)We then rollback to the second SAVEPOINT using the ROLLBACK TO SAVEPOINT statement. This means any changes made
+ after the second SAVEPOINT will be undone.
+5)Finally, we commit the overall transaction using the COMMIT statement, which makes the changes permanent. However, since 
+we rolled back to the second SAVEPOINT, only the changes up to that point will be committed.
+Assignment 6: Draft a brief report on the use of transaction logs for data recovery and create a hypothetical scenario where a
+ transaction log is instrumental in data recovery after an unexpected shutdown.
+Report: Utilizing Transaction Logs for Data Recovery
+Introduction:
+Transaction logs play a crucial role in ensuring data integrity and facilitating data recovery in database systems. 
+They record all transactions and modifications made to the database, providing a detailed history of changes. In the event of 
+unexpected shutdowns, system failures, or data corruption, transaction logs are instrumental in restoring the database to a consistent state.
+
+Purpose of Transaction Logs:
+Transaction logs serve multiple purposes in database management:
+Data Recovery: Transaction logs enable the recovery of data to a consistent state by replaying transactions from the log, bringing the database back to a point before the failure occurred.
+Point-in-Time Recovery: They allow for restoration of the database to a specific point in time, useful for recovering from logical errors or accidental data deletions.
+Auditing and Compliance: Transaction logs provide an audit trail, recording all changes to the database, which is essential for compliance with regulatory requirements and forensic investigations.
+Replication and Disaster Recovery: Transaction logs facilitate database replication and disaster recovery strategies by enabling the synchronization of data between primary and secondary databases.
+Scenario:
+Consider a hypothetical scenario where a large e-commerce platform experiences an unexpected system crash during peak shopping hours.
+ Orders are being processed, payments are being made, and inventory is being updated when the database server suddenly goes offline due to a power outage.
+Impact of Shutdown:
+The abrupt shutdown results in the loss of critical transactional data and leaves the database in an inconsistent state. Orders that were in progress 
+remain incomplete, payments may have been deducted without proper processing, and inventory levels are uncertain.
+Utilizing Transaction Logs for Recovery:
+In this scenario, transaction logs become invaluable for restoring the database to a consistent state and recovering lost data. Database administrators leverage transaction logs to:
+
+1)Identify the last committed transactions before the system crash.
+2)Replay the transactions from the logs to recreate the database state prior to the crash.
+3)Roll back incomplete transactions or reconcile any discrepancies in the data.
+4)Perform point-in-time recovery if necessary, to address any erroneous transactions or data modifications that occurred before the crash.
+Conclusion:
+Transaction logs serve as a vital safety net for data recovery in the event of unexpected shutdowns or failures. By capturing every transaction and change to the
+ database, transaction logs enable database administrators to restore data integrity, minimize downtime, and ensure business continuity. Implementing robust backup 
+and recovery strategies that incorporate transaction logs is essential for maintaining the reliability and availability of critical systems.
+
+
+Assignment 6: Create a new database user with specific privileges using the CREATE USER and GRANT commands.
+ Then, write a script to REVOKE certain privileges and DROP the user.
+
+1. Create User and Grant Privileges:
+-- Create user with username 'app_user' and password 'secure_password' allowing access from localhost
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'secure_password';
+
+-- Grant SELECT and INSERT privileges on the 'products' database and all its tables
+GRANT SELECT, INSERT ON products.* TO 'app_user'@'localhost';
+
+-- Flush privileges to ensure immediate effect
+FLUSH PRIVILEGES;
+2. Revoke Privileges:
+-- Revoke INSERT privilege on the 'products' database
+REVOKE INSERT ON products.* FROM 'app_user'@'localhost';
+-- User can now only read data (SELECT) but cannot insert new products
+3. Drop User:
+-- Drop the user 'app_user'
+DROP USER 'app_user'@'localhost';
+-- User is now removed from the database system
+Explanation:
+The first part creates the user app_user with a password and allows access from localhost.
+Then, it grants SELECT and INSERT privileges on the entire products database for this user.
+Flushing privileges ensures the changes take effect immediately.
+The second part revokes the INSERT privilege, restricting the user to only reading data.
+Finally, the third part permanently removes the user app_user from the database system.
+This script demonstrates how to create a user with specific permissions, modify those permissions, and finally 
+remove the user entirely. Remember to replace products with your actual database name if needed.
+
+
+
+ 
